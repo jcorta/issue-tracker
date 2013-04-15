@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="edu.unlp.db.domain.Team" table="TEAM">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION"></version>
+		<property name="name" column="NAME" type="java.lang.String"
+			length="20" unique="true" />
+		<set name="users" table="USER_TEAM">
+			<key column="TEAM_ID" />
+			<many-to-many column="USER_ID" class="edu.unlp.db.domain.User" />
+		</set>
+	</class>
+</hibernate-mapping>

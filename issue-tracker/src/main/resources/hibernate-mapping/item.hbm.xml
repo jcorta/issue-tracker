@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="edu.unlp.db.domain.Item" table="ITEM">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION"></version>
+		<property name="subject" column="SUBJECT" type="java.lang.String"
+			length="200" />
+		<property name="description" column="DESCRIPTION" type="java.lang.String"
+			length="1000" />
+		<property name="created" column="CREATED" type="java.util.Date" />
+		<set name="comments"  cascade="all-delete-orphan">
+			<key column="ITEM_ID" />
+			<one-to-many class="edu.unlp.db.domain.ItemComment" />
+		</set>
+		<set name="stateHistory" cascade="all-delete-orphan">
+			<key column="ITEM_ID" />
+			<one-to-many class="edu.unlp.db.domain.ItemStateHistory" />
+		</set>
+		<many-to-one name="state" column="STATE_ID"
+			class="edu.unlp.db.domain.ItemState" />
+		<many-to-one name="priority" column="PRIORITY_ID"
+			class="edu.unlp.db.domain.ItemPriority" />
+		<many-to-one name="type" column="TYPE_ID"
+			class="edu.unlp.db.domain.ItemType" />
+		<many-to-one name="user" column="USER_ID" class="edu.unlp.db.domain.User" />
+	</class>
+	<class name="edu.unlp.db.domain.ItemStateHistory" table="ITEM_STATE_HISTORY">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION"></version>
+		<property name="changedDate" column="CHANGED_DATE" type="java.util.Date" />
+		<many-to-one name="fromState" column="FROM_STATE_ID"
+			class="edu.unlp.db.domain.ItemState" />
+		<many-to-one name="toState" column="TO_STATE_ID"
+			class="edu.unlp.db.domain.ItemState" />
+		<many-to-one name="changedBy" column="USER_ID"
+			class="edu.unlp.db.domain.User" />
+	</class>
+</hibernate-mapping>

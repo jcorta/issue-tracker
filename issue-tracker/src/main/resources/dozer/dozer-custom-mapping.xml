@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mappings xmlns="http://dozer.sourceforge.net" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://dozer.sourceforge.net
+http://dozer.sourceforge.net/schema/beanmapping.xsd">
+
+	<configuration>
+		<custom-converters> <!-- these are always bi-directional -->
+			<converter type="edu.unlp.db.converters.TeamToStringConverter">
+				<class-a>edu.unlp.db.domain.Team</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+			<converter type="edu.unlp.db.converters.UserToStringConverter">
+				<class-a>edu.unlp.db.domain.User</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+			<converter type="edu.unlp.db.converters.ItemStateToString">
+				<class-a>edu.unlp.db.domain.ItemState</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+			<converter type="edu.unlp.db.converters.ItemTypeToString">
+				<class-a>edu.unlp.db.domain.ItemType</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+			<converter type="edu.unlp.db.converters.ItemPriorityToString">
+				<class-a>edu.unlp.db.domain.ItemPriority</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+			<converter type="edu.unlp.db.converters.WorkflowToString">
+				<class-a>edu.unlp.db.domain.Workflow</class-a>
+				<class-b>java.lang.String</class-b>
+			</converter>
+		</custom-converters>
+	</configuration>
+
+	<mapping>
+		<class-a>edu.unlp.db.domain.Workflow</class-a>
+		<class-b>edu.unlp.db.dto.WorkflowDto</class-b>
+		<field custom-converter-id="workflowStateConverter">
+			<a>validSecuenceStates</a>
+			<b>stateTransitions</b>
+		</field>
+	</mapping>
+
+	<mapping>
+		<class-a>edu.unlp.db.domain.Item</class-a>
+		<class-b>edu.unlp.db.dto.ItemDto</class-b>
+		<field>
+			<a>type</a>
+			<b>itemTypeName</b>
+		</field>
+	</mapping>
+
+</mappings>

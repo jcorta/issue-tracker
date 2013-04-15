@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="edu.unlp.db.domain.Tracker" table="TRACKER">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION"></version>
+		<set name="users" table="user" lazy="true" fetch="select"
+			cascade="all-delete-orphan">
+			<key>
+				<column name="TRACKER_ID" />
+			</key>
+			<one-to-many class="edu.unlp.db.domain.User" />
+		</set>
+		<set name="teams" table="TEAM" lazy="true" fetch="select"
+			cascade="all-delete-orphan">
+			<key>
+				<column name="TRACKER_ID" />
+			</key>
+			<one-to-many class="edu.unlp.db.domain.Team" />
+		</set>
+		<set name="itemStates" table="ITEM_STATE" lazy="true" fetch="select"
+			cascade="all-delete-orphan">
+			<key>
+				<column name="TRACKER_ID" />
+			</key>
+			<one-to-many class="edu.unlp.db.domain.ItemState" />
+		</set>
+		<set name="itemPriorities" table="ITEM_PRIORITY" lazy="true" fetch="select"
+			cascade="all-delete-orphan">
+			<key>
+				<column name="TRACKER_ID" />
+			</key>
+			<one-to-many class="edu.unlp.db.domain.ItemPriority" />
+		</set>
+		<set name="workflows" table="WORKFLOW" lazy="true" fetch="select"
+			cascade="all-delete-orphan">
+			<key>
+				<column name="TRACKER_ID" />
+			</key>
+			<one-to-many class="edu.unlp.db.domain.Workflow" />
+		</set>
+		<set name="itemTypes" table="ITEM_TYPE" lazy="true" fetch="select"
+			cascade="all-delete-orphan">
+			<key>
+				<column name="TRACKER_ID" />
+			</key>
+			<one-to-many class="edu.unlp.db.domain.ItemType" />
+		</set>
+		<set name="items" table="ITEM" lazy="true" fetch="select"
+			cascade="all-delete-orphan">
+			<key>
+				<column name="TRACKER_ID" />
+			</key>
+			<one-to-many class="edu.unlp.db.domain.Item" />
+		</set>
+	</class>
+</hibernate-mapping>

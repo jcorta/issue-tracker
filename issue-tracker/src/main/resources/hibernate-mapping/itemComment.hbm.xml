@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="edu.unlp.db.domain.ItemComment" table="ITEM_COMMENT">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION"></version>
+		<property name="comment" column="COMMENT" type="java.lang.String"
+			length="100" />
+		<many-to-one name="user" column="USER_ID"
+			class="edu.unlp.db.domain.User" />
+		<property name="date" column="DATE" type="java.util.Date" />
+	</class>
+</hibernate-mapping>

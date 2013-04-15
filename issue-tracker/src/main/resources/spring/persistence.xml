@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-3.2.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-3.2.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang-3.2.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+	<!-- Datasource -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass"
+			value="${jdbc.datasource.driverClassName:com.mysql.jdbc.Driver}" />
+		<property name="jdbcUrl"
+			value="${dataSource.url:jdbc:mysql://localhost/tracking?characterEncoding=UTF-8}" />
+		<property name="user" value="${dataSource.username:root}" />
+		<property name="password" value="${dataSource.password:root}" />
+		<property name="maxPoolSize" value="${jdbc.datasource.maxPoolSize:10}" />
+		<property name="testConnectionOnCheckin" value="true" />
+		<property name="idleConnectionTestPeriod" value="30" />
+	</bean>
+
+	<!-- Hibernate Session Factory -->
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<!-- <prop key="hibernate.connection.isolation">2</prop> -->
+				<!-- <prop key="hibernate.transaction.factory_class">org.hibernate.transaction.JDBCTransactionFactory -->
+				<!-- </prop> -->
+				<!-- <prop key="hibernate.current_session_context_class">thread</prop> -->
+<!-- 				<prop key="hibernate.show_sql">true</prop> -->
+				<!-- L2 Cache -->
+				<!-- <prop key="hibernate.cache.use_second_level_cache">false</prop> -->
+				<!-- <prop key="hibernate.cache.use_query_cache">false</prop> -->
+				<!-- <prop key="hibernate.cache.use_minimal_puts">true</prop> -->
+				<!-- <prop key="hibernate.default_batch_fetch_size">16</prop> -->
+				<!-- <prop key="hibernate.cache.use_structured_entries">true</prop> -->
+				<!-- <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop> -->
+				<!-- <prop key="hibernate.cache.provider_configuration_file_resource_path">classpath:ehcache.xml</prop> -->
+
+<!-- 				<prop key="hibernate.hbm2ddl.auto">create</prop> -->
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>hibernate-mapping/itemComment.hbm.xml</value>
+				<value>hibernate-mapping/itemPriority.hbm.xml</value>
+				<value>hibernate-mapping/itemState.hbm.xml</value>
+				<value>hibernate-mapping/itemType.hbm.xml</value>
+				<value>hibernate-mapping/item.hbm.xml</value>
+				<value>hibernate-mapping/user.hbm.xml</value>
+				<value>hibernate-mapping/team.hbm.xml</value>
+				<value>hibernate-mapping/workflow.hbm.xml</value>
+				<value>hibernate-mapping/tracker.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- Transacion Manager -->
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+
+	<aop:config>
+		<aop:pointcut id="servicesPointCut"
+			expression="execution(*
+	 edu.unlp.db.service.impl.*.*(..))" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="servicesPointCut" />
+	</aop:config>
+	
+		<bean id="trackerLoader" class="edu.unlp.db.loader.TrackerLoader">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+</beans>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="edu.unlp.db.domain.ItemType" table="ITEM_TYPE">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION"></version>
+		<property name="name" column="NAME" type="java.lang.String"
+			length="20" unique="true" />
+		<property name="description" column="DESCRIPTION" type="java.lang.String"
+			length="200" />
+		<set name="posibleTeams" table="ITEM_TYPE_TEAM">
+			<key column="ITEM_TYPE_ID" />
+			<many-to-many column="TEAM_ID" class="edu.unlp.db.domain.Team" />
+		</set>
+		<many-to-one name="workflow" column="WORKFLOW_ID"
+			class="edu.unlp.db.domain.Workflow" />
+	</class>
+</hibernate-mapping>
