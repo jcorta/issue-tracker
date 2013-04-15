@@ -1,0 +1,6 @@
+- Esta configurado por default para que use mysql
+- Esta configurado el mysql local y en el puerto por defecto
+- Si se quiere cambiar cualquier configuracion se puede agregar un archivo config.properties en cualquier lugar del classpath
+- El esquema lo crea en el startup, se se quiere que no lo recree cada vez, hay que cambiar en el persistence.xml la siguiente linea: <prop key="hibernate.hbm2ddl.auto">create</prop>
+- La db tiene que estar creada: create database tracking
+- Para importar el proyecto en eclipse puede hacerse con el plugin de maven de eclipse o por linea de comando con maven
