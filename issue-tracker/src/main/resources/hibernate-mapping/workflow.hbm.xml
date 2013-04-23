@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="edu.unlp.db.domain.Workflow" table="WORKFLOW">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION" />
+		<property name="name" column="NAME" type="java.lang.String"
+			length="100" unique="true"/>
+		<map name="validSecuenceStates" cascade="all-delete-orphan">
+			<key column="WORKFLOW_ID" />
+			<index-many-to-many column="FROM_STATE_ID" class="edu.unlp.db.domain.ItemState" />
+			<one-to-many class="edu.unlp.db.domain.WorkflowItem" />
+		</map>
+	</class>
+	<class name="edu.unlp.db.domain.WorkflowItem" table="WORKFLOW_ITEM">
+		<id name="oid" type="long" column="ID">
+			<generator class="identity" />
+		</id>
+		<version name="version" column="VERSION"></version>
+		<many-to-one name="fromState" column="FROM_STATE_ID"
+			class="edu.unlp.db.domain.ItemState" />
+		<set name="toStates" table="WORKFLOW_VALID_STATE">
+			<key column="WORKFLOW_ITEM_ID" />
+			<many-to-many column="TO_ID" class="edu.unlp.db.domain.ItemState" />
+		</set>
+	</class>
+</hibernate-mapping>

@@ -1,0 +1,67 @@
+No olvidar de poner "application/json" en el header http "Accept" y en el "Content-Type"
+
+USER
+----
+POST: http://127.0.0.1:8081/seguimiento/json/party/user/juan/pass123
+POST: http://127.0.0.1:8081/seguimiento/json/party/user/pepe/pass123
+GET: http://127.0.0.1:8081/seguimiento/json/party/users
+
+TEAM
+----
+POST: http://127.0.0.1:8081/seguimiento/json/party/team/desarrollo
+POST: http://127.0.0.1:8081/seguimiento/json/party/team/qa
+GET: http://127.0.0.1:8081/seguimiento/json/party/teams
+
+AGREGAR USUARIO A GRUPO
+-----------------------
+POST: http://127.0.0.1:8081/seguimiento/json/party/addUserToTeam/juan/desarrollo
+POST: http://127.0.0.1:8081/seguimiento/json/party/addUserToTeam/pepe/qa
+GET: http://127.0.0.1:8081/seguimiento/json/party/teams
+GET: http://127.0.0.1:8081/seguimiento/json/party/users
+
+ITEM STATE
+----------
+POST: http://127.0.0.1:8081/seguimiento/json/itemState/creado/creado
+POST: http://127.0.0.1:8081/seguimiento/json/itemState/desarrollo/desarrollo
+POST: http://127.0.0.1:8081/seguimiento/json/itemState/validacion/validacion
+POST: http://127.0.0.1:8081/seguimiento/json/itemState/terminado/terminado
+GET: http://127.0.0.1:8081/seguimiento/json/itemStates
+
+WORKFLOW:
+---------
+POST: http://127.0.0.1:8081/seguimiento/json/workflow
+	{"name":"Workflow de bugs","stateTransitions":{"desarrollo":["validacion"],"creado":["desarrollo"],"validacion":["terminado"]}}
+	GET: http://127.0.0.1:8081/seguimiento/json/workflows
+
+	EDITO EL WORKFLOW (Le agrego una nueva transicion)
+	------------------
+	PUT: http://127.0.0.1:8081/seguimiento/json/workflow
+		{"oid":1, "version":0, "name":"Workflow de bugs","stateTransitions":{"desarrollo":["validacion"],"creado":["desarrollo"],"validacion":["desarrollo","terminado"]}}
+
+		ITEM TYPE:
+		---------
+		POST: http://127.0.0.1:8081/seguimiento/json/itemType
+			{ "name": "Bug", "description": "Bugs del sistema", "workflow": "Workflow de bugs", "posibleTeams": ["desarrollo","qa"] }
+			GET: http://127.0.0.1:8081/seguimiento/json/itemTypes
+
+			ITEM PRIORITY
+			-------------
+			POST: http://127.0.0.1:8081/seguimiento/json/itemPriority/urgente/urgente
+			GET: http://127.0.0.1:8081/seguimiento/json/itemPriorities
+
+			CREAR ITEM
+			----------
+			POST: http://127.0.0.1:8081/seguimiento/json/item
+				{"subject":"Error en alta","description":"Al dar de alta un pasajero el sisitema da un error", "state":"creado", "priority":"urgente", "itemTypeName":"Bug", "user":"juan"}
+				GET: http://127.0.0.1:8081/seguimiento/json/items
+
+				EDITAR ITEM (cambio de estado)
+				------------------------------
+				put: http://127.0.0.1:8081/seguimiento/json/item/juan
+					{"oid":1 , "version":0,"subject":"Error en alta 1","description":"Al dar de alta un pasajero el sisitema da un error 1", "state":"desarrollo", "priority":"urgente"}
+					GET: http://127.0.0.1:8081/seguimiento/json/items
+
+					AGREGAR COMENTARIO
+					------------------
+					POST: http://127.0.0.1:8081/seguimiento/json/item/addComment/2/pepe/hola
+					GET: http://127.0.0.1:8081/seguimiento/json/items
