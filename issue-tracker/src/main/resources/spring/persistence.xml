@@ -27,7 +27,7 @@
 		<property name="jdbcUrl"
 			value="${dataSource.url:jdbc:mysql://localhost/tracking?characterEncoding=UTF-8}" />
 		<property name="user" value="${dataSource.username:root}" />
-		<property name="password" value="${dataSource.password:root}" />
+		<property name="password" value="${dataSource.password:1sm43l.2004}" />
 		<property name="maxPoolSize" value="${jdbc.datasource.maxPoolSize:10}" />
 		<property name="testConnectionOnCheckin" value="true" />
 		<property name="idleConnectionTestPeriod" value="30" />
@@ -56,7 +56,7 @@
 				<!-- <prop key="hibernate.cache.provider_class">net.sf.ehcache.hibernate.EhCacheProvider</prop> -->
 				<!-- <prop key="hibernate.cache.provider_configuration_file_resource_path">classpath:ehcache.xml</prop> -->
 
-				<prop key="hibernate.hbm2ddl.auto">create</prop>
+				<prop key="hibernate.hbm2ddl.auto">validate</prop>
 			</props>
 		</property>
 		<property name="mappingResources">
