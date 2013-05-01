@@ -36,4 +36,7 @@ public class Team {
 	public void addUser(User user){
 		getUsers().add(user);
 	}
+	public void removeUser(User user) {
+		getUsers().remove(user);
+	}
 }
