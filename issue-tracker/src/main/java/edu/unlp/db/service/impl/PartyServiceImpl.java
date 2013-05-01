@@ -89,6 +89,16 @@ public class PartyServiceImpl extends EntityService implements PartyService, Par
 		team.addUser(user);
 	}
 
+	public void removeUserFromTeam(String username, String teamName) {
+		Assert.notNull(username, "username no puede ser null");
+		Assert.notNull(teamName, "groupName no puede ser null");
+
+		User user = getUserByUsername(username);
+		Team team = getTeamByName(teamName);
+		
+		team.removeUser(user);
+	}
+
 	public Collection<UserDto> getUsers() {
 		Collection<User> users = getTracker().getUsers();
 		Collection<UserDto> ret = new ArrayList<UserDto>();

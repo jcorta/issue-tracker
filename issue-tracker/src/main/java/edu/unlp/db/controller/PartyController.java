@@ -54,4 +54,9 @@ public class PartyController {
 	public @ResponseBody void addUserToTeam(@PathVariable String userName, @PathVariable String teamName) {
 		partyService.addUserToTeam(userName, teamName);
 	}
+	
+	@RequestMapping(value="/removeUserFromTeam/{userName}/{teamName}", method = RequestMethod.POST)
+	public @ResponseBody void removeUserFromTeam(@PathVariable String userName, @PathVariable String teamName) {
+		partyService.removeUserFromTeam(userName, teamName);
+	}
 }
