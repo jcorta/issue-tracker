@@ -27,6 +27,12 @@ POST: http://127.0.0.1:8081/seguimiento/json/itemState/validacion/validacion
 POST: http://127.0.0.1:8081/seguimiento/json/itemState/terminado/terminado
 GET: http://127.0.0.1:8081/seguimiento/json/itemStates
 
+ITEM PRIORITY
+-------------
+POST: http://127.0.0.1:8081/seguimiento/json/itemPriority/urgente/urgente
+GET: http://127.0.0.1:8081/seguimiento/json/itemPriorities
+
+
 WORKFLOW:
 ---------
 POST: http://127.0.0.1:8081/seguimiento/json/workflow
@@ -44,10 +50,6 @@ POST: http://127.0.0.1:8081/seguimiento/json/workflow
 			{ "name": "Bug", "description": "Bugs del sistema", "workflow": "Workflow de bugs", "posibleTeams": ["desarrollo","qa"] }
 			GET: http://127.0.0.1:8081/seguimiento/json/itemTypes
 
-			ITEM PRIORITY
-			-------------
-			POST: http://127.0.0.1:8081/seguimiento/json/itemPriority/urgente/urgente
-			GET: http://127.0.0.1:8081/seguimiento/json/itemPriorities
 
 			CREAR ITEM
 			----------
