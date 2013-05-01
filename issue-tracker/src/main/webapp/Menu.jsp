@@ -7,10 +7,10 @@
 			<a href="#" class="brand">Issue Tracker</a>
 			<div class="nav-collapse collapse">
 				<ul class="nav">
-					<li><a href="#">Insidencias</a></li>
-					<li id="menu_users"><a href="#">Usuarios</a></li>
-					<li><a href="#">Grupos</a></li>
-					<li id="menu_itemStates"><a href="#">Estados</a></li>
+					<li><a href="#">Incidencias</a></li>
+					<li id="menu_users"><a href="./Users.jsp">Usuarios</a></li>
+					<li id="menu_teams"><a href="./Teams.jsp">Equipos</a></li>
+					<li id="menu_itemStates"><a href="./ItemStates.jsp">Estados</a></li>
 					<li><a href="#">Workflow</a></li>
 				</ul>
 			</div>

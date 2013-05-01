@@ -7,6 +7,7 @@
 <title>Issue Tracker</title>
 <link href="css/bootstrap.css" rel="stylesheet" />
 <link href="css/bootstrap-responsive.css" rel="stylesheet" />
+<link rel="shortcut icon" href="./img/favicon.gif">
 <style type="text/css">
 body {
 	padding-top: 60px;
@@ -38,8 +39,9 @@ body {
 					<td data-bind="text: oid"></td>
 					<td data-bind="text: name"></td>
 					<td data-bind="text: description"></td>
-					<td><a class="btn" data-bind="click: $parent.deleteItemState"><i
-							class="icon-trash"></i></a></td>
+					<td>
+						<p class="text-right"><a class="btn" data-bind="click: $parent.deleteItemState"><i class="icon-trash"></i></a></p>
+					</td>
 				</tr>
 			</tbody>
 		</table>
@@ -87,10 +89,10 @@ body {
 								+ encodeURIComponent(self.description())).done(
 						function() {
 							messageViewModel.ok("Estado Creado");
+							self.refresh();
 						}).fail(function() {
 					messageViewModel.error("Fallo la Creación del Estado");
 				});
-				self.refresh();
 			};
 			this.deleteItemState = function() {
 				var name = this.name;

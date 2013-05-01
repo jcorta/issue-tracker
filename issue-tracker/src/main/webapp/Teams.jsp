@@ -21,7 +21,7 @@ body {
 	<!-- fin de menu -->
 	<!-- container -->
 	<div id="container" class="container">
-		<h1>Usuario<a href="#myModal" role="button" class="btn"
+		<h1>Equipos<a href="#myModal" role="button" class="btn"
 				data-toggle="modal"><i class="icon-plus-sign"></i></a>
 		</h1>
 		<table class="table table-striped">
@@ -29,22 +29,22 @@ body {
 				<tr>
 					<th>Id</th>
 					<th>Nombre</th>
-					<th>Grupos</th>
+					<th>Usuarios</th>
 					<th></th>
 				</tr>
 			</thead>
-			<tbody data-bind="foreach: users">
+			<tbody data-bind="foreach: teams">
 				<tr>
 					<td data-bind="text: oid"></td>
-					<td data-bind="text: username"></td>
-					<td data-bind="foreach: teams">
+					<td data-bind="text: name"></td>
+					<td data-bind="foreach: users">
 						<ul>
 							<li data-bind="text: $data"></li>
 						</ul>
 					</td>
 					<td><p class="text-right">
-						<a class="btn" data-bind="click: $parent.deleteUser"><i class="icon-trash"></i></a>
-						<a class="btn" data-bind="click: $parent.addTeams"><i class="icon-wrench"></i></a></p>
+						<a class="btn" data-bind="click: $parent.deleteTeam"><i class="icon-trash"></i></a>
+						<a class="btn" data-bind="click: $parent.addUsers"><i class="icon-user"></i></a></p>
 					</td>
 				</tr>
 			</tbody>
@@ -54,28 +54,26 @@ body {
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h3>Agregar un Usuario</h3>
+				<h3>Agregar un Equipo</h3>
 			</div>
 			<div class="modal-body">
 				<form onsubmit="javascript:return false;">
 					<label>Nombre</label> <input id="name" class="input-block-level"
-						data-bind="value: name" /> <label>password</label>
-					<input type="password" id="description" class="input-block-level" rows="4"
-						cols="4" data-bind="value: password" />
+						data-bind="value: name" /> 
 				</form>
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</a>
-				<a href="#" class="btn btn-primary" data-bind="click: createUser" data-dismiss="modal">Guardar</a>
+				<a href="#" class="btn btn-primary" data-bind="click: createTeam" data-dismiss="modal">Guardar</a>
 			</div>
 		</div>
 		<!-- fin div popup -->
-		<!-- inicio div popupTeams -->
-		<div id="teams" class="modal hide fade">
+		<!-- inicio div popuUsuarios -->
+		<div id="users" class="modal hide fade">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h3>Agregar Equipos al Usuario</h3>
+				<h3>Agregar Usuarios al Equipo</h3>
 			</div>
 			<div class="modal-body" data-bind="foreach: candidates">
 				<div>
@@ -84,81 +82,81 @@ body {
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</a>
-				<a href="#" class="btn btn-primary" data-bind="click: addToUser" data-dismiss="modal">Guardar</a>
+				<a href="#" class="btn btn-primary" data-bind="click: addToTeam" data-dismiss="modal">Guardar</a>
 			</div>
 		</div>
-		<!-- fin div popupTeams -->
+		<!-- fin div popupUsuarios -->
 	</div>
 	<!-- fin container -->
 
 	<!-- javascript -->
 	<script type="text/javascript">
-		function UsersViewModel() {
+		function TeamsViewModel() {
 			var self = this;
 			this.name = ko.observable();
-			this.password = ko.observable();
-			this.users = ko.observableArray();
+			this.teams = ko.observableArray();
 			this.toAdd = ko.observableArray();
 			this.candidates = ko.observableArray();
 			this.refresh = function() {
-				$.getJSON(root + "/json/party/users", function(data) {
-					self.users(data);
+				$.getJSON(root + "/json/party/teams", function(data) {
+					self.teams(data);
 				});
 			};
-			this.createUser = function() {
+			this.createTeam = function() {
 				$.post(
-						root + "/json/party/user/"
-								+ encodeURIComponent(self.name()) + "/"
-								+ encodeURIComponent(self.password())).done(
+						root + "/json/party/team/"
+								+ encodeURIComponent(self.name())).done(
 						function() {
-							messageViewModel.ok("Usuario Creado");
+							messageViewModel.ok("Equipo Creado");
 							self.refresh();
 						}).fail(function() {
-					messageViewModel.error("Falló la Creación del Usuario");
+					messageViewModel.error("Falló la Creación del Equipo");
 				});
 			};
 			
-			this.addTeams =function(){
-				self.name(this.username);
+			this.addUsers =function(){
+				self.name(this.name);
 				self.toAdd.removeAll();
 				self.candidates.removeAll();
-				var user = this; 
+				var team = this; 
 				$.ajax({
-					  url: root + "/json/party/teams",
+					  url: root + "/json/party/users",
 					  dataType: 'json',
 					  async: false,
 					  success: function(data) {
-					     $.each(data,function(index, team){
-					    	 if(user.teams.indexOf(team.name)==-1){
-					    		 self.candidates.push(team.name);
+					     $.each(data,function(index, user){
+					    	 if(team.users.indexOf(user.username)==-1){
+					    		 self.candidates.push(user.username);
 					    	 }
 					     });
 					  }
 					});
-				$("#teams").modal("show");
+				$("#users").modal("show");
+				
 			};
 			
-			this.addToUser= function(){
+			this.addToTeam =function(){
 				$.each(self.toAdd(),function(index,data){
 					$.ajax({
 						  type: 'POST',
-						  url: root+"/json/party/addUserToTeam/"+encodeURIComponent(self.name())+"/"+encodeURIComponent(data),
+						  url: root+"/json/party/addUserToTeam/"+encodeURIComponent(data)+"/"+encodeURIComponent(self.name()),
 						  async:false
 						});
 				});
 				self.refresh();
-			}
+			};
 			
-			this.deleteUser = function() {
-				var name = this.username;
+			
+			this.deleteTeam = function() {
+				var name = this.name;
 				bootbox
 						.confirm(
-								'Desea Eliminar el Usuario ' + name,
+								'Desea Eliminar el Equipo ' + name,
 								"Cancelar",
 								"Eliminar",
 								function(result) {
 									if(result)
-									$.ajax(root+ "/json/party/user/"+encodeURIComponent(name),
+									$.ajax(root+ "/json/party/team/"+encodeURIComponent(name),
 													{
 														type : "DELETE",
 														async : false
@@ -166,12 +164,12 @@ body {
 											.done(
 													function() {
 														messageViewModel
-																.ok("Usuario Eliminado");
+																.ok("Equipo Eliminado");
 													})
 											.fail(
 													function() {
 														messageViewModel
-																.error("No se puedo borrar el Usuario");
+																.error("No se puedo borrar el Equipo");
 													});
 									self.refresh();
 								});
@@ -182,8 +180,8 @@ body {
 	</script>
 
 	<script type="text/javascript">
-		$("#menu_users").addClass("active");
-		var viewModel = new UsersViewModel();
+		$("#menu_teams").addClass("active");
+		var viewModel = new TeamsViewModel();
 		ko.applyBindings(viewModel, document.getElementById("container"));
 		viewModel.refresh();
 	</script>
