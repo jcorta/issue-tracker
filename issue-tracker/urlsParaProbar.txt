@@ -19,6 +19,12 @@ POST: http://127.0.0.1:8081/seguimiento/json/party/addUserToTeam/pepe/qa
 GET: http://127.0.0.1:8081/seguimiento/json/party/teams
 GET: http://127.0.0.1:8081/seguimiento/json/party/users
 
+BORRAR USUARIO DE GRUPO
+-----------------------
+POST http://127.0.0.1:8081/seguimiento/json/party/removeUserFromTeam/juan/desarrollo
+GET: http://127.0.0.1:8081/seguimiento/json/party/teams
+GET: http://127.0.0.1:8081/seguimiento/json/party/users
+
 ITEM STATE
 ----------
 POST: http://127.0.0.1:8081/seguimiento/json/itemState/creado/creado

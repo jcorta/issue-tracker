@@ -16,4 +16,5 @@ public interface PartyService{
 	public Collection<TeamDto> getTeams();
 	
 	public void addUserToTeam(String username, String groupName);
+	public void removeUserFromTeam(String userName, String teamName);
 }
