@@ -12,7 +12,7 @@
 					<li id="menu_teams"><a href="./Teams.jsp">Equipos</a></li>
 					<li id="menu_itemStates"><a href="./ItemStates.jsp">Estados</a></li>
 					<li id="menu_itemPriorities"><a href="./ItemPriorities.jsp">Prioridades</a></li>
-					<li><a href="#">Workflow</a></li>
+					<li id="menu_workflows"><a href="./Workflows.jsp">Workflows</a></li>
 				</ul>
 			</div>
 		</div>
@@ -25,9 +25,11 @@
 	</div>
 </div>
 <script src="js/jquery.js"></script>
+<script src="js/jquery.json-2.4.js"></script>
 <script src="js/bootstrap.js"></script>
 <script src="js/bootbox.js"></script>
 <script src="js/knockout-2.2.1.js"></script>
+<script src="js/model.js"></script>
 <script type="text/javascript">
 <!--
 	var root = "${pageContext.request.contextPath}";
