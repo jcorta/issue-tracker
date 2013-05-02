@@ -37,10 +37,11 @@ body {
 				<tr>
 					<td data-bind="text: oid"></td>
 					<td data-bind="text: username"></td>
-					<td data-bind="foreach: teams">
-						<ul>
-							<li data-bind="text: $data"></li>
-						</ul>
+					<td data-bind="foreach:teams">
+						<div class="row">
+						<a class="btn" data-bind="click: $root.removeTeam.bind($parent)"><i class="icon-remove-sign"></i></a>
+						<span data-bind="text: $data"></span>
+						</div>
 					</td>
 					<td><p class="text-right">
 						<a class="btn" data-bind="click: $parent.deleteUser"><i class="icon-trash"></i></a>
@@ -136,6 +137,35 @@ body {
 					  }
 					});
 				$("#teams").modal("show");
+			};
+			
+			
+			this.removeTeam = function(team){
+		    	var user = this.username;
+		    	bootbox
+				.confirm(
+						'Desea Eliminar el equipo ' + team,
+						"Cancelar",
+						"Eliminar",
+						function(result) {
+							if(result)
+							$.ajax(root+ "/json/party/removeUserFromTeam/"+encodeURIComponent(user)+"/"+encodeURIComponent(team),
+											{
+												type : "DELETE",
+												async : false
+											})
+									.done(
+											function() {
+												messageViewModel
+														.ok("Equipo Eliminado");
+											})
+									.fail(
+											function() {
+												messageViewModel
+														.error("No se puedo eliminar el Equipo");
+											});
+							self.refresh();
+						});
 			};
 			
 			this.addToUser= function(){

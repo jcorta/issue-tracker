@@ -37,10 +37,11 @@ body {
 				<tr>
 					<td data-bind="text: oid"></td>
 					<td data-bind="text: name"></td>
-					<td data-bind="foreach: users">
-						<ul>
-							<li data-bind="text: $data"></li>
-						</ul>
+					<td data-bind="foreach:users">
+						<div class="row">
+						<a class="btn" data-bind="click: $root.removeUser.bind($parent)"><i class="icon-remove-sign"></i></a>
+						<span data-bind="text: $data"></span>
+						</div>
 					</td>
 					<td><p class="text-right">
 						<a class="btn" data-bind="click: $parent.deleteTeam"><i class="icon-trash"></i></a>
@@ -113,6 +114,34 @@ body {
 					messageViewModel.error("Falló la Creación del Equipo");
 				});
 			};
+			
+		    this.removeUser = function(user){
+		    	var team = this.name;
+		    	bootbox
+				.confirm(
+						'Desea Eliminar el Usuario ' + user,
+						"Cancelar",
+						"Eliminar",
+						function(result) {
+							if(result)
+							$.ajax(root+ "/json/party/removeUserFromTeam/"+encodeURIComponent(user)+"/"+encodeURIComponent(team),
+											{
+												type : "DELETE",
+												async : false
+											})
+									.done(
+											function() {
+												messageViewModel
+														.ok("Usuario Eliminado");
+											})
+									.fail(
+											function() {
+												messageViewModel
+														.error("No se puedo elimiar el Usuario");
+											});
+							self.refresh();
+						});
+		    };	
 			
 			this.addUsers =function(){
 				self.name(this.name);
