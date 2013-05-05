@@ -42,7 +42,9 @@ body {
 					<td data-bind="text: description"></td>
 					<td data-bind="text: workflow"></td>
 					<td data-bind="foreach: posibleTeams">
-						<div data-bind="text: $data"></div>
+						<div>
+							<i class="icon-user"></i> <span data-bind="text: $data"></span>
+						</div>
 					</td>
 					<td>
 						<p class="text-right"><a class="btn" data-bind="click: $parent.deleteItemType"><i class="icon-trash"></i></a></p>
