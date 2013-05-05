@@ -5,7 +5,10 @@
 
 	<display-name>Tracker</display-name>
 	<description></description>
-
+    
+    <welcome-file-list>
+    	<welcome-file>Items.jsp</welcome-file>
+    </welcome-file-list>
 	<!--Este factory levanta los beans en application-context.xml -->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
