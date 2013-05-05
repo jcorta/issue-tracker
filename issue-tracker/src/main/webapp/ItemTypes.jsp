@@ -22,7 +22,7 @@ body {
 	<!-- container -->
 	<div id="container" class="container">
 		<h1>
-			Prioridades <a href="#myModal" role="button" class="btn"
+			Tipos de Incidencias <a href="#myModal" role="button" class="btn"
 				data-toggle="modal"><i class="icon-plus-sign"></i></a>
 		</h1>
 		<table class="table table-striped">
@@ -31,16 +31,21 @@ body {
 					<th>Id</th>
 					<th>Nombre</th>
 					<th>Descripci&oacute;n</th>
-					<th></th>
+					<th>Workflow</th>
+					<th>Equipos</th>
 				</tr>
 			</thead>
-			<tbody data-bind="foreach: itemPriorities">
+			<tbody data-bind="foreach: itemTypes">
 				<tr>
 					<td data-bind="text: oid"></td>
 					<td data-bind="text: name"></td>
 					<td data-bind="text: description"></td>
+					<td data-bind="text: workflow"></td>
+					<td data-bind="foreach: posibleTeams">
+						<div data-bind="text: $data"></div>
+					</td>
 					<td>
-						<p class="text-right"><a class="btn" data-bind="click: $parent.deleteItemPriority"><i class="icon-trash"></i></a></p>
+						<p class="text-right"><a class="btn" data-bind="click: $parent.deleteItemType"><i class="icon-trash"></i></a></p>
 					</td>
 				</tr>
 			</tbody>
@@ -50,20 +55,28 @@ body {
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal"
 					aria-hidden="true">&times;</button>
-				<h3>Agregar una Prioridad</h3>
+				<h3>Agregar una Tipo de Incidencia</h3>
 			</div>
 			<div class="modal-body">
 				<form onsubmit="javascript:return false;">
-					<label>Nombre</label> <input id="name" class="input-block-level"
-						data-bind="value: name" /> <label>Descripci&oacute;n</label>
-					<textarea id="description" class="input-block-level" rows="4"
-						cols="4" data-bind="value: description"></textarea>
+					<label>Nombre</label> <input id="name" class="input-block-level" data-bind="value: name" /> 
+					<label>Descripci&oacute;n</label> <textarea id="description" class="input-block-level" rows="4" cols="4" data-bind="value: description"></textarea>
+					<label>Workflow</label><select id="workflow" class="input-block-level" data-bind="options:workflows, optionsText:'name', value:workflow"></select>
+					<label>Equipos</label>
+					<div data-bind="foreach: teams">
+						<div>
+							<label class="checkbox">
+								<span data-bind="text: $data.name"></span>
+								<input type="checkbox" data-bind="value:$data.name, checked:$root.selectedTeams"/>
+							</label>
+						</div>
+					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
 				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Cancelar</a>
 				<a href="#" class="btn btn-primary"
-					data-bind="click: createItemPriority" data-dismiss="modal">Guardar</a>
+					data-bind="click: createItemType" data-dismiss="modal">Guardar</a>
 			</div>
 		</div>
 		<!-- fin div popup -->
@@ -72,38 +85,60 @@ body {
 
 	<!-- javascript -->
 	<script type="text/javascript">
-		function ItemsPrioritiesViewModel() {
+		
+		function ItemsTypeViewModel() {
 			var self = this;
 			this.name = ko.observable();
 			this.description = ko.observable();
-			this.itemPriorities = ko.observableArray();
+			this.workflow = ko.observable();
+			
+			this.itemTypes = ko.observableArray();
+			this.workflows = ko.observableArray();
+			this.teams = ko.observableArray();
+			this.selectedTeams = ko.observableArray();
+			
 			this.refresh = function() {
-				$.getJSON(root + "/json/itemPriorities", function(data) {
-					self.itemPriorities(data);
+				$.getJSON(root + "/json/itemTypes", function(data) {
+					self.itemTypes(data);
+				});
+				$.getJSON(root + "/json/workflows", function(data) {
+					self.workflows(data);
+				});
+				$.getJSON(root + "/json/party/teams", function(data) {
+					self.teams(data);
 				});
 			};
-			this.createItemPriority = function() {
-				$.post(
-						root + "/json/itemPriority/"
-								+ encodeURIComponent(self.name()) + "/"
-								+ encodeURIComponent(self.description())).done(
+			this.createItemType = function() {
+				var type = new Object();
+				type.name = self.name();
+				type.description = self.description();
+				type.workflow = self.workflow().name;
+				type.posibleTeams = self.selectedTeams();
+				
+				$.ajax({
+					 type: "POST",
+					 url: root + "/json/itemType",
+					 data: $.toJSON(type),
+					 async: false,
+					 dataType: "json",
+					 contentType: "application/json"
+					 }).done(
 						function() {
-							messageViewModel.ok("Prioridad Creada");
+							messageViewModel.ok("Tipo de Incidencia Agregado");
 							self.refresh();
 						}).fail(function() {
-					messageViewModel.error("Fallo la Creación de la Prioridad");
-				});
+					messageViewModel.error("Fallo la inclusión del Tipo de Incidencia");});
 			};
-			this.deleteItemPriority = function() {
+			this.deleteItemType = function() {
 				var name = this.name;
 				bootbox
 						.confirm(
-								'Desea Eliminar la Prioridad ' + name,
+								'Desea Eliminar el Tipo de Incidencia ' + name,
 								"Cancelar",
 								"Eliminar",
 								function(result) {
 									if(result)
-									$.ajax(root+ "/json/itemPriority/"+encodeURIComponent(name),
+									$.ajax(root+ "/json/itemType/"+encodeURIComponent(name),
 													{
 														type : "DELETE",
 														async : false
@@ -111,12 +146,12 @@ body {
 											.done(
 													function() {
 														messageViewModel
-																.ok("Prioridad Eliminada");
+																.ok("Tipo de Incidencia Eliminado");
 													})
 											.fail(
 													function() {
 														messageViewModel
-																.error("No se puedo borrar la Prioridad");
+																.error("No se puedo borrar Tipo de Incidencia");
 													});
 									self.refresh();
 								});
@@ -128,7 +163,7 @@ body {
 
 	<script type="text/javascript">
 		$("#menu_itemTypes").addClass("active");
-		var viewModel = new ItemsPrioritiesViewModel();
+		var viewModel = new ItemsTypeViewModel();
 		ko.applyBindings(viewModel, document.getElementById("container"));
 		viewModel.refresh();
 	</script>
